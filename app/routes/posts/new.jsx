@@ -1,5 +1,6 @@
 import { Link } from '@remix-run/react';
 import { redirect } from '@remix-run/node';
+import { db } from '~/utils/db.server';
 
 export const action = async ({ request }) => {
   const form = await request.formData();
@@ -8,8 +9,9 @@ export const action = async ({ request }) => {
 
   const fields = { title, body };
 
-  console.log(fields);
-  return redirect('/posts');
+  const post = await db.post.create({ data: fields });
+
+  return redirect(`/posts/${post.id}`);
 };
 
 function NewPost() {
